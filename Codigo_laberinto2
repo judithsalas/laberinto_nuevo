@@ -1,3 +1,9 @@
+"""
+El Laberinto.
+Juego creado para resolver un sencillo dédalo acotado por almohadillas donde el jugador 
+deberá introducir la dirección a la que se dirige para alcanzar la meta de 
+llegar a la salida sin errores. Si comete algún error, comenzará de nuevo.
+"""
 def crear_laberinto(filas, columnas, muros):
     laberinto = [[' ' for _ in range(columnas)] for _ in range(filas)]
 
@@ -7,29 +13,35 @@ def crear_laberinto(filas, columnas, muros):
 
     return laberinto
 
-def direcciones(laberinto):
+def imprimir_laberinto_con_jugador(laberinto, jugador_pos):
+    for i, fila in enumerate(laberinto):
+        for j, celda in enumerate(fila):
+            if (i, j) == jugador_pos:
+                print('P', end=' ')
+            else:
+                print(celda, end=' ')
+        print()
+
+def mover_jugador(laberinto, direccion, jugador_pos):
     filas = len(laberinto)
     columnas = len(laberinto[0])
+    
+    fila, columna = jugador_pos
 
-    for fila in range(filas):
-        for columna in range(columnas):
-            if laberinto[fila][columna] != '#':
-                direcciones = []
-                
-                if fila > 0 and laberinto[fila - 1][columna] != '#':
-                    direcciones.append('Arriba')
-                if fila < filas - 1 and laberinto[fila + 1][columna] != '#':
-                    direcciones.append('Abajo')
-                if columna > 0 and laberinto[fila][columna - 1] != '#':
-                    direcciones.append('Izquierda')
-                if columna < columnas - 1 and laberinto[fila][columna + 1] != '#':
-                    direcciones.append('Derecha')
+    if direccion == 'arriba' and fila > 0 and laberinto[fila - 1][columna] != '#':
+        jugador_pos = (fila - 1, columna)
+    elif direccion == 'abajo' and fila < filas - 1 and laberinto[fila + 1][columna] != '#':
+        jugador_pos = (fila + 1, columna)
+    elif direccion == 'izquierda' and columna > 0 and laberinto[fila][columna - 1] != '#':
+        jugador_pos = (fila, columna - 1)
+    elif direccion == 'derecha' and columna < columnas - 1 and laberinto[fila][columna + 1] != '#':
+        jugador_pos = (fila, columna + 1)
+    else:
+        print("¡Movimiento fallido! Intenta nuevamente.")
+        return jugador_pos
 
-                laberinto[fila][columna] = direcciones
+    return jugador_pos
 
-def imprimir_laberinto(laberinto):
-    for fila in laberinto:
-        print(fila)
 
 # Coordenadas del laberinto
 muros = ((0, 1), (0, 2), (0, 3), (0, 4), (1, 1), (2, 1), (2, 3), (3, 3), (4, 0), (4, 1), (4, 2), (4, 3))
@@ -38,5 +50,15 @@ muros = ((0, 1), (0, 2), (0, 3), (0, 4), (1, 1), (2, 1), (2, 3), (3, 3), (4, 0),
 filas, columnas = 5, 5
 
 laberinto = crear_laberinto(filas, columnas, muros)
-direcciones(laberinto)
-imprimir_laberinto(laberinto)
+
+# Posición inicial del jugador
+jugador_pos = (0, 0)
+
+while jugador_pos != (filas - 1, columnas - 1):
+    imprimir_laberinto_con_jugador(laberinto, jugador_pos)
+    direccion = input("Ingresa tu dirección (arriba/abajo/izquierda/derecha): ")
+    
+    jugador_pos = mover_jugador(laberinto, direccion, jugador_pos)
+
+print("¡Felicidades! Has llegado a la salida.")
+
