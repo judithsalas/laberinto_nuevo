@@ -1,0 +1,42 @@
+def crear_laberinto(filas, columnas, muros):
+    laberinto = [[' ' for _ in range(columnas)] for _ in range(filas)]
+
+    for muro in muros:
+        fila, columna = muro
+        laberinto[fila][columna] = '#'
+
+    return laberinto
+
+def direcciones(laberinto):
+    filas = len(laberinto)
+    columnas = len(laberinto[0])
+
+    for fila in range(filas):
+        for columna in range(columnas):
+            if laberinto[fila][columna] != '#':
+                direcciones = []
+                
+                if fila > 0 and laberinto[fila - 1][columna] != '#':
+                    direcciones.append('Arriba')
+                if fila < filas - 1 and laberinto[fila + 1][columna] != '#':
+                    direcciones.append('Abajo')
+                if columna > 0 and laberinto[fila][columna - 1] != '#':
+                    direcciones.append('Izquierda')
+                if columna < columnas - 1 and laberinto[fila][columna + 1] != '#':
+                    direcciones.append('Derecha')
+
+                laberinto[fila][columna] = direcciones
+
+def imprimir_laberinto(laberinto):
+    for fila in laberinto:
+        print(fila)
+
+# Coordenadas del laberinto
+muros = ((0, 1), (0, 2), (0, 3), (0, 4), (1, 1), (2, 1), (2, 3), (3, 3), (4, 0), (4, 1), (4, 2), (4, 3))
+
+# Tamaño del laberinto
+filas, columnas = 5, 5
+
+laberinto = crear_laberinto(filas, columnas, muros)
+direcciones(laberinto)
+imprimir_laberinto(laberinto)
